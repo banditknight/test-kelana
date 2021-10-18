@@ -60,7 +60,7 @@ dbo.connectToServer(function (err) {
           c.write(Buffer.alloc(1, 1));
         } else {
           let avl = parser.getAvl();
-          console.log(avl);
+          // console.log(avl);
           addLog(avl);
 
           // for(var i=0;i<avl.number_of_data;i++){
@@ -76,7 +76,7 @@ dbo.connectToServer(function (err) {
   
           let response = writer.ByteBuffer;
           c.write(response);
-          console.log("=========\n\n");
+          // console.log("=========\n\n");
         }
   
       } catch (error) {
@@ -87,6 +87,6 @@ dbo.connectToServer(function (err) {
   
   });
   
-  server.listen(4545, () => { console.log("Server started"); });
+  server.listen(4545, () => { console.log("Sock Server started 4545"); });
 
 });
