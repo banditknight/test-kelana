@@ -44,6 +44,24 @@ recordRoutes.route('/rechistory').get(async function (_req, res) {
   }
 });
 
+recordRoutes.route('/track').get(async function (_req, res) {
+  const dbConnect = dbo.getDb();
+
+  try {
+    let data = await dbConnect.collection('gpsrecord').find().toArray();
+    return res.status(200).json({
+      status: 'success',
+      message: 'data berhasil ditampilkan',
+      data
+    })    
+  } catch (error) {
+    return res.status(400).json({
+      status: 'Error!',
+      message: error.message
+    })
+  }
+});
+
 // This section will help you get a list of all the records.
 recordRoutes.route('/listings').get(async function (_req, res) {
   const dbConnect = dbo.getDb();

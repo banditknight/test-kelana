@@ -36,6 +36,12 @@ function addRecord(data){
   }
 }
 
+function addTrack(data){
+  if(dblog){
+    dblog.collection('gpstrack').insertOne(data);
+  }
+}
+
 // perform a database connection when the server starts
 dbo.connectToServer(function (err) {
   if (err) {
@@ -57,9 +63,9 @@ dbo.connectToServer(function (err) {
     c.on('end', () => {
       console.log("client disconnected");
     });
-  
+
     c.on('data', (data) => {
-  
+
       try {
         let buffer = data;
         let parser = new Parser(buffer);
@@ -77,28 +83,40 @@ dbo.connectToServer(function (err) {
           for(var i=0;i<avl.number_of_data;i++){
             let rec = avl.records[i];
             addRecord(rec);
+            
+            let track = {
+              imei: imei,
+              timestamp: rec.timestamp,
+              speed: rec.gps.speed,
+              location: {
+                type: "Point",
+                coordinates: [rec.gps.longitude, rec.gps.latitude]
+              },
+            };
+            addTrack(track);
+
             // console.log(rec);
             // for(var j=0;j<rec.ioElements.length;j++){
             //   console.log(rec.ioElements[j]);
             // }
           }
-  
+
           let writer = new binutils.BinaryWriter();
           writer.WriteInt32(avl.number_of_data);
-  
+
           let response = writer.ByteBuffer;
           c.write(response);
           // console.log("=========\n\n");
         }
-  
+
       } catch (error) {
         console.log(new Date(),error);
       }
-  
+
     });
-  
+
   });
-  
+
   server.listen(4545, () => { console.log("Sock Server is running on port: 4545"); });
 
 });
