@@ -24,18 +24,24 @@ recordRoutes.route('/history').get(async function (_req, res) {
       message: error.message
     })
   }
+});
 
-  // dbConnect
-  //   .collection('gpslog')
-  //   .find({})
-  //   // .limit(50)
-  //   .toArray(function (err, result) {
-  //     if (err) {
-  //       res.status(400).send('Error fetching listings!');
-  //     } else {
-  //       res.json(result);
-  //     }
-  //   });
+recordRoutes.route('/rechistory').get(async function (_req, res) {
+  const dbConnect = dbo.getDb();
+
+  try {
+    let data = await dbConnect.collection('gpsrecord').find().toArray();
+    return res.status(200).json({
+      status: 'success',
+      message: 'data berhasil ditampilkan',
+      data
+    })    
+  } catch (error) {
+    return res.status(400).json({
+      status: 'Error!',
+      message: error.message
+    })
+  }
 });
 
 // This section will help you get a list of all the records.

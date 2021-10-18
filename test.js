@@ -30,6 +30,12 @@ function addLog(data){
   }
 }
 
+function addRecord(data){
+  if(dblog){
+    dblog.collection('gpsrecord').insertOne(data);
+  }
+}
+
 // perform a database connection when the server starts
 dbo.connectToServer(function (err) {
   if (err) {
@@ -68,13 +74,14 @@ dbo.connectToServer(function (err) {
 
           addLog(logdata);
 
-          // for(var i=0;i<avl.number_of_data;i++){
-          //   let rec = avl.records[i];
-          //   console.log(rec);
-          //   for(var j=0;j<rec.ioElements.length;j++){
-          //     console.log(rec.ioElements[j]);
-          //   }
-          // }
+          for(var i=0;i<avl.number_of_data;i++){
+            let rec = avl.records[i];
+            addRecord(rec);
+            // console.log(rec);
+            // for(var j=0;j<rec.ioElements.length;j++){
+            //   console.log(rec.ioElements[j]);
+            // }
+          }
   
           let writer = new binutils.BinaryWriter();
           writer.WriteInt32(avl.number_of_data);
