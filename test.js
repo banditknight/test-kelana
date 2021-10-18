@@ -22,6 +22,7 @@ app.use(require('./routes/record'));
 // });
 
 let dblog;
+let imei;
 
 function addLog(data){
   if(dblog){
@@ -57,12 +58,13 @@ dbo.connectToServer(function (err) {
         let buffer = data;
         let parser = new Parser(buffer);
         if (parser.isImei) {
+          imei = parser.imei;
           c.write(Buffer.alloc(1, 1));
         } else {
           let avl = parser.getAvl();
           // console.log(avl);
           let logdata = avl;
-          logdata.imei = parser.imei;
+          logdata.imei = imei;
 
           addLog(logdata);
 
