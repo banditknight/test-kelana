@@ -90,6 +90,6 @@ dbo.connectToServer(function (err) {
   
   });
   
-  server.listen(4545, () => { console.log("Sock Server started 4545"); });
+  server.listen(4545, () => { console.log("Sock Server is running on port: 4545"); });
 
 });
