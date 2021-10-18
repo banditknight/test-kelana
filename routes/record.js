@@ -48,7 +48,7 @@ recordRoutes.route('/track').get(async function (_req, res) {
   const dbConnect = dbo.getDb();
 
   try {
-    let data = await dbConnect.collection('gpsrecord').find().toArray();
+    let data = await dbConnect.collection('gpstrack').find().toArray();
     return res.status(200).json({
       status: 'success',
       message: 'data berhasil ditampilkan',
