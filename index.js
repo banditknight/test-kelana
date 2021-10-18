@@ -61,7 +61,10 @@ dbo.connectToServer(function (err) {
         } else {
           let avl = parser.getAvl();
           // console.log(avl);
-          addLog(avl);
+          let logdata = avl;
+          logdata.imei = parser.imei;
+
+          addLog(logdata);
 
           // for(var i=0;i<avl.number_of_data;i++){
           //   let rec = avl.records[i];
