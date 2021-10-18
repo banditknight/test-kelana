@@ -21,7 +21,7 @@ recordRoutes.route('/history').get(async function (_req, res) {
   } catch (error) {
     return res.status(400).json({
       status: 'Error!',
-      message: err.message
+      message: error.message
     })
   }
 
