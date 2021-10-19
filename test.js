@@ -115,7 +115,8 @@ dbo.connectToServer(function (err) {
             for(var j=0;j<rec.ioElements.length;j++){
               // console.log(rec.ioElements[j]);
               if(rec.ioElements[j].id==236){
-                sendNotification("Alarm! https://maps.google.com/?q="+rec.gps.latitude+","+rec.gps.longitude);
+                // sendNotification("Alarm! https://maps.google.com/?q="+rec.gps.latitude+","+rec.gps.longitude);
+                sendNotification("{\"lat\":"+rec.gps.latitude+",\"lng\":"+rec.gps.longitude+"}");
               }
             }
           }
