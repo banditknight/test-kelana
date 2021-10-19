@@ -15,10 +15,12 @@ app.use(cors());
 app.use(express.json());
 app.use(require('./routes/record'));
 
-const ws = require('ws');
-const wsServer = new ws.Server({ noServer: true });
+const wss = require('ws');
+let ws;
+const wsServer = new wss.Server({ noServer: true });
 wsServer.on('connection', socket => {
-  socket.on('message', message => console.log(message));
+  ws = socket;
+  ws.on('message', message => console.log(message));
 });
 
 // Global error handling

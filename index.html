@@ -7,7 +7,7 @@
         #map {
             height: 100%;
         }
-
+        
         /* Optional: Makes the sample page fill the window. */
         html,
         body {
@@ -19,7 +19,7 @@
 </head>
 <body>
     <div id="map"></div>
-
+    
     <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
     <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMJuDFmD5SnO7NQfuBUi9lkwXBOxBSqNw&callback=initMap&v=weekly"
@@ -28,79 +28,83 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
         let map;
-
+        
         function initMap() {
             map = new google.maps.Map(document.getElementById("map"), {
                 center: { lat: -6.2958166, lng: 106.6356933 },
                 zoom: 13,
             });
-
+            
             const path = [];
-
+            
             const url="http://147.139.135.136:9090/history";
             axios.get(url)
             .then(data=>{
                 // console.log(data.data.data)
-
+                
                 let n = 1;
-
+                
                 for (const log in data.data.data) {
                     if (Object.hasOwnProperty.call(data.data.data, log)) {
                         const l = data.data.data[log];
                         for (const rec in l.records) {
                             if (Object.hasOwnProperty.call(l.records, rec)) {
                                 const r = l.records[rec];
-
+                                
                                 if(r.gps.latitude != 0 && r.gps.longitude != 0){
                                     // console.log(r);
-
+                                    
                                     // new google.maps.Marker({
-                                    //     position: { lat: r.gps.latitude, lng: r.gps.longitude },
-                                    //     map,
-                                    //     title: "Point "+n,
-                                    // });
-                                    n++;
-
-                                    path.push({ lat: r.gps.latitude, lng: r.gps.longitude });
-
+                                        //     position: { lat: r.gps.latitude, lng: r.gps.longitude },
+                                        //     map,
+                                        //     title: "Point "+n,
+                                        // });
+                                        n++;
+                                        
+                                        path.push({ lat: r.gps.latitude, lng: r.gps.longitude });
+                                        
+                                    }
+                                    
                                 }
-
                             }
                         }
                     }
+                    
+                    // console.log(path);
+                    
+                    const lineSymbol = {
+                        path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                    };
+                    
+                    const flightPath = new google.maps.Polyline({
+                        path: path,
+                        geodesic: true,
+                        strokeColor: "#FF0000",
+                        strokeOpacity: 1.0,
+                        strokeWeight: 2,
+                        icons: [
+                        {
+                            icon: lineSymbol,
+                            offset: "100%",
+                            repeat: "60px",
+                        },]
+                    });
+                    
+                    flightPath.setMap(map);
+                    
+                    
+                })
+                .catch(error=>console.log(error));
+                
+                webSocket = new WebSocket('ws://147.139.135.136:9090');
+                webSocket.send("helo");
+                webSocket.onmessage = function (event) {
+                    console.log(event.data);
                 }
-
-                console.log(path);
-
-                const lineSymbol = {
-                    path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-                };
-
-                const flightPath = new google.maps.Polyline({
-                    path: path,
-                    geodesic: true,
-                    strokeColor: "#FF0000",
-                    strokeOpacity: 1.0,
-                    strokeWeight: 2,
-                    icons: [
-                    {
-                        icon: lineSymbol,
-                        offset: "100%",
-                        repeat: "60px",
-                    },]                    
-                });
-
-                flightPath.setMap(map);
-
-
-            })
-            .catch(error=>console.log(error));
-
-
-        }
-    </script>
-    <script>
-
-    </script>
-</body>
-</html>
+            }
+        </script>
+        <script>
+            
+        </script>
+    </body>
+    </html>
