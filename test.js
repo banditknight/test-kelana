@@ -8,64 +8,24 @@ const express = require('express');
 const cors = require('cors');
 const dbo = require('./db/conn');
 
-const { Client } = require('whatsapp-web.js');
-const client = new Client();
-
-const qr = require("qrcode");
-
 const PORT = process.env.PORT || 5000;
 const app = express();
-
-let waqr = "http://ombak.id";
 
 app.use(cors());
 app.use(express.json());
 app.use(require('./routes/record'));
 
-app.get("/botlogin",(req,res)=>{
-  qr.toDataURL(waqr,(err,src)=>{
-    if (err) res.send("Error occured");
-    res.send("<img src=\""+src+"\" />");
-  });
+const ws = require('ws');
+const wsServer = new ws.Server({ noServer: true });
+wsServer.on('connection', socket => {
+  socket.on('message', message => console.log(message));
 });
-
-client.on('qr', (qr) => {
-  // Generate and scan this code with your phone
-  waqr = qr;
-  console.log('QR RECEIVED', qr);
-});
-
-client.on('ready', () => {
-  waqr = "http://ombak.id";
-  console.log('WA Client is ready!');
-});
-
-client.on('message', msg => {
-  if (msg.body == 'tes') {
-    msg.reply('tis');
-  }
-});
-
-client.initialize();
 
 // Global error handling
 // app.use(function (err, _req, res) {
 //   console.error(err.stack);
 //   res.status(500).send('Something broke!');
 // });
-
-async function sendWA(number,message){
-  const sanitized_number = number.toString().replace(/[- )(]/g, ""); // remove unnecessary chars from the number
-  const final_number = `62${sanitized_number.substring(sanitized_number.length - 10)}`; // add 91 before the number here 91 is country code of India
-
-  const number_details = await client.getNumberId(final_number); // get mobile number details
-
-  if (number_details) {
-    const sendMessageData = await client.sendMessage(number_details._serialized, message); // send message
-  } else {
-    console.log(final_number, "Mobile number is not registered");
-  }
-}
 
 let dblog;
 let imei;
@@ -88,6 +48,10 @@ function addTrack(data){
   }
 }
 
+function sendNotification(message){
+  ws.send(message);
+}
+
 // perform a database connection when the server starts
 dbo.connectToServer(function (err) {
   if (err) {
@@ -98,10 +62,14 @@ dbo.connectToServer(function (err) {
   dblog = dbo.getDb();
 
   // start the Express server
-  app.listen(PORT, () => {
+  let httpserver = app.listen(PORT, () => {
     console.log(`Server is running on port: ${PORT}`);
   });
-
+  httpserver.on('upgrade', (request, socket, head) => {
+    wsServer.handleUpgrade(request, socket, head, socket => {
+      wsServer.emit('connection', socket, request);
+    });
+  });
 
   let server = net.createServer((c) => {
 
@@ -145,7 +113,7 @@ dbo.connectToServer(function (err) {
             for(var j=0;j<rec.ioElements.length;j++){
               // console.log(rec.ioElements[j]);
               if(rec.ioElements[j].id==236){
-                sendWA("8112641739","Alarm! https://maps.google.com/?q="+rec.gps.latitude+","+rec.gps.longitude);
+                sendNotification("Alarm! https://maps.google.com/?q="+rec.gps.latitude+","+rec.gps.longitude);
               }
             }
           }
