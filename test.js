@@ -154,7 +154,7 @@ dbo.connectToServer(function (err) {
           c.write(response);
           // console.log("=========\n\n");
 
-          sendWA("628112641739","data masuk");
+          sendWA("8112641739","data masuk");
 
         }
 
