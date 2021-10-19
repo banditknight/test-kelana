@@ -455,6 +455,10 @@ class Codec8 extends Codec {
                 label    : "BLE 4 Humidity",
                 dimension: "%RH"
             },
+            113: {
+                label    : "Battery Level",
+                dimension: "%"
+            },
             181: {
                 label: "PDOP"
             },
@@ -477,6 +481,13 @@ class Codec8 extends Codec {
             },
             206: {
                 label: "GSM Area Code"
+            },
+            236: {
+                label : "Alarm",
+                values: {
+                    0: "Reserved",
+                    1: "Alarm On"
+                }
             },
             238: {
                 label: "User ID"
