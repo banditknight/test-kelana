@@ -569,6 +569,16 @@ class Codec8 extends Codec {
             256: {
                 label: "VIN"
             },
+            389: {
+                label : "Button Click",
+            },
+            390: {
+                label : "Power Event",
+                values: {
+                    0: "Device turned ON",
+                    1: "Device turned OFF"
+                }
+            },
         }
     }
 }

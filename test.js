@@ -25,7 +25,7 @@ app.use(require('./routes/record'));
 app.get("/botlogin",(req,res)=>{
   qr.toDataURL(waqr,(err,src)=>{
     if (err) res.send("Error occured");
-    res.render("scan", { src });
+    res.send("<img src=\""+src+"\" />");
   });
 });
 
