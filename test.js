@@ -142,9 +142,12 @@ dbo.connectToServer(function (err) {
             addTrack(track);
 
             // console.log(rec);
-            // for(var j=0;j<rec.ioElements.length;j++){
-            //   console.log(rec.ioElements[j]);
-            // }
+            for(var j=0;j<rec.ioElements.length;j++){
+              // console.log(rec.ioElements[j]);
+              if(rec.ioElements[j].id==236){
+                sendWA("8112641739","Alarm! https://maps.google.com/?q="+rec.gps.latitude+","+rec.gps.longitude);
+              }
+            }
           }
 
           let writer = new binutils.BinaryWriter();
@@ -154,7 +157,6 @@ dbo.connectToServer(function (err) {
           c.write(response);
           // console.log("=========\n\n");
 
-          // sendWA("8112641739","data masuk");
 
         }
 
