@@ -75,7 +75,7 @@ recordRoutes.route('/xtrack').get(async function (_req, res) {
         points.push({x:p.location.coordinates[0],y:p.location.coordinates[0]});
       }
     }
-    let s = simplify(points,5,false);
+    let s = simplify(points,1,false);
 
     return res.status(200).json({
       status: 'success',
