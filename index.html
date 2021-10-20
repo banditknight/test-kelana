@@ -27,11 +27,11 @@
     ></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
-    document.addEventListener("DOMContentLoaded", function(event) {
+        // document.addEventListener("DOMContentLoaded", function(event) {
 
 
-        // Your code to run since DOM is loaded and ready
-    });
+        //     // Your code to run since DOM is loaded and ready
+        // });
 
         let map;
         let snd = new Audio('./alarm1.wav');
@@ -55,36 +55,18 @@
 
             const path = [];
 
-            const url="http://147.139.135.136:9090/history";
+            const url="http://147.139.135.136:9090/xtrack";
             axios.get(url)
             .then(data=>{
-                // console.log(data.data.data)
+                // console.log(data.data.s)
 
                 let n = 1;
 
-                for (const log in data.data.data) {
-                    if (Object.hasOwnProperty.call(data.data.data, log)) {
-                        const l = data.data.data[log];
-                        for (const rec in l.records) {
-                            if (Object.hasOwnProperty.call(l.records, rec)) {
-                                const r = l.records[rec];
-
-                                if(r.gps.latitude != 0 && r.gps.longitude != 0){
-                                    // console.log(r);
-
-                                    // new google.maps.Marker({
-                                    //     position: { lat: r.gps.latitude, lng: r.gps.longitude },
-                                    //     map,
-                                    //     title: "Point "+n,
-                                    // });
-                                    n++;
-
-                                    path.push({ lat: r.gps.latitude, lng: r.gps.longitude });
-
-                                }
-
-                            }
-                        }
+                for (const log in data.data.s) {
+                    if (Object.hasOwnProperty.call(data.data.s, log)) {
+                        const l = data.data.s[log];
+                        // console.log(l);
+                        path.push({ lat: l.y, lng: l.x });
                     }
                 }
 
@@ -124,8 +106,6 @@
             }
         }
         </script>
-        <script>
 
-        </script>
     </body>
-    </html>
+</html>

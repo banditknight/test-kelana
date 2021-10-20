@@ -77,7 +77,7 @@ recordRoutes.route('/xtrack').get(async function (_req, res) {
         }
       }
     }
-    let s = simplify(points,1,false);
+    let s = simplify(points,0.0001,false);
 
     return res.status(200).json({
       status: 'success',
