@@ -72,7 +72,9 @@ recordRoutes.route('/xtrack').get(async function (_req, res) {
     for (const el in data) {
       if (Object.hasOwnProperty.call(data, el)) {
         const p = data[el];
-        points.push({x:p.location.coordinates[0],y:p.location.coordinates[0]});
+        if(p.location.coordinates[0]!=0 && p.location.coordinates[1]!=0){
+          points.push({x:p.location.coordinates[0],y:p.location.coordinates[1]});
+        }
       }
     }
     let s = simplify(points,1,false);
