@@ -1,4 +1,5 @@
 const express = require('express');
+const simplify = require('simplify-js');
 
 // recordRoutes is an instance of the express router.
 // We use it to define our routes.
@@ -53,6 +54,33 @@ recordRoutes.route('/track').get(async function (_req, res) {
       status: 'success',
       message: 'data berhasil ditampilkan',
       data
+    })    
+  } catch (error) {
+    return res.status(400).json({
+      status: 'Error!',
+      message: error.message
+    })
+  }
+});
+
+recordRoutes.route('/xtrack').get(async function (_req, res) {
+  const dbConnect = dbo.getDb();
+
+  try {
+    let data = await dbConnect.collection('gpstrack').find().toArray();
+    let points = [];
+    for (const el in data) {
+      if (Object.hasOwnProperty.call(data, el)) {
+        const p = data[el];
+        points.push({x:p.location.coordinates[0],y:p.location.coordinates[0]});
+      }
+    }
+    let s = simplify(points,5,false);
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'data berhasil ditampilkan',
+      s
     })    
   } catch (error) {
     return res.status(400).json({

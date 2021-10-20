@@ -27,14 +27,24 @@
     ></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+
+
+        // Your code to run since DOM is loaded and ready
+    });
+
         let map;
+        let snd = new Audio('./alarm1.wav');
+        snd.muted = true;
+        const alarmmarker = "http://maps.google.com/mapfiles/kml/shapes/caution.png";
 
         function addAlarm(coord){
             new google.maps.Marker({
                 position: { lat: coord.lat, lng: coord.lng },
                 map,
-                title: "Point "+n,
+                icon: alarmmarker,
             });
+            snd.play();
         }
 
         function initMap() {
@@ -71,48 +81,48 @@
 
                                     path.push({ lat: r.gps.latitude, lng: r.gps.longitude });
 
-                                    }
-
                                 }
+
                             }
                         }
                     }
-
-                    // console.log(path);
-
-                    const lineSymbol = {
-                        path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-                    };
-
-                    const flightPath = new google.maps.Polyline({
-                        path: path,
-                        geodesic: true,
-                        strokeColor: "#FF0000",
-                        strokeOpacity: 1.0,
-                        strokeWeight: 2,
-                        icons: [
-                        {
-                            icon: lineSymbol,
-                            offset: "100%",
-                            repeat: "60px",
-                        },]
-                    });
-
-                    flightPath.setMap(map);
-
-
-                })
-                .catch(error=>console.log(error));
-
-                webSocket = new WebSocket('ws://147.139.135.136:9090');
-                webSocket.onopen = ()=>{
-                    webSocket.send("helo");
                 }
-                webSocket.onmessage = function (event) {
-                    console.log(event.data);
-                    addAlarm(event.data);
-                }
+
+                // console.log(path);
+
+                const lineSymbol = {
+                    path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                };
+
+                const flightPath = new google.maps.Polyline({
+                    path: path,
+                    geodesic: true,
+                    strokeColor: "#FF0000",
+                    strokeOpacity: 1.0,
+                    strokeWeight: 2,
+                    icons: [
+                    {
+                        icon: lineSymbol,
+                        offset: "100%",
+                        repeat: "60px",
+                    },]
+                });
+
+                flightPath.setMap(map);
+
+
+            })
+            .catch(error=>console.log(error));
+
+            webSocket = new WebSocket('ws://147.139.135.136:9090');
+            webSocket.onopen = ()=>{
+                webSocket.send("helo");
             }
+            webSocket.onmessage = function (event) {
+                console.log(event.data);
+                addAlarm(JSON.parse(event.data));
+            }
+        }
         </script>
         <script>
 
